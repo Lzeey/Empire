@@ -32,9 +32,10 @@ from threading import Thread
 #Windows specific imports
 import platform
 OS_TYPE = platform.system()
-if "windows" in OS_TYPE.lower():
+print(OS_TYPE)
+if OS_TYPE == "Windows":
     print("Windows detected")
-    import winpwd as pwd
+    #import winpwd as pwd
 else:
     import grp, pwd
 
@@ -915,12 +916,13 @@ def directory_listing(path):
         else:
             permstr = "-{}".format(permstr)
 
-        user = pwd.getpwuid(fstat.st_uid)[0]
         # Hotfix for windows
-        if "windows" in OS_TYPE.lower():
+        if OS_TYPE == "Windows":
             group = 123
+            user = 'SOMETHING'
         else:
             group = grp.getgrgid(fstat.st_gid)[0]
+            user = pwd.getpwuid(fstat.st_uid)[0]
 
         # Convert file size to MB, KB or Bytes
         if (fstat.st_size > 1024 * 1024):
