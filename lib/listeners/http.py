@@ -147,6 +147,11 @@ class Listener:
                 'Description'   :   'The Slack channel or DM that notifications will be sent to.',
                 'Required'      :   False,
                 'Value'         :   '#general'
+            },
+            'LogLevel' : {
+                'Description'   :   '[Python only] Logging level. Set to DEBUG for debugging'
+                'Required'      :   False,
+                'Value'         :   'WARNING'
             }
         }
 
@@ -650,6 +655,7 @@ class Listener:
         killDate = listenerOptions['KillDate']['Value']
         workingHours = listenerOptions['WorkingHours']['Value']
         b64DefaultResponse = base64.b64encode(self.default_response())
+        loglevel = listenerOptions['LogLevel']['Value']
 
         if language == 'powershell':
 
@@ -691,11 +697,13 @@ class Listener:
             code = helpers.strip_python_comments(code)
 
             # patch in the delay, jitter, lost limit, and comms profile
+            # [Custom]: Patch in logging level
             code = code.replace('delay = 60', 'delay = %s' % (delay))
             code = code.replace('jitter = 0.0', 'jitter = %s' % (jitter))
             code = code.replace('profile = "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"', 'profile = "%s"' % (profile))
             code = code.replace('lostLimit = 60', 'lostLimit = %s' % (lostLimit))
             code = code.replace('defaultResponse = base64.b64decode("")', 'defaultResponse = base64.b64decode("%s")' % (b64DefaultResponse))
+            code = code.replace('loglevel = "WARNING"', 'loglevel= = "%s"' % (loglevel))
 
             # patch in the killDate and workingHours if they're specified
             if killDate != "":
