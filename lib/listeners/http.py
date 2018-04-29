@@ -74,12 +74,12 @@ class Listener:
             'DefaultDelay' : {
                 'Description'   :   'Agent delay/reach back interval (in seconds).',
                 'Required'      :   True,
-                'Value'         :   5
+                'Value'         :   10
             },
             'DefaultJitter' : {
                 'Description'   :   'Jitter in agent reachback interval (0.0-1.0).',
                 'Required'      :   True,
-                'Value'         :   0.0
+                'Value'         :   0.2
             },
             'DefaultLostLimit' : {
                 'Description'   :   'Number of missed checkins before exiting',
@@ -89,12 +89,19 @@ class Listener:
             'DefaultProfile' : {
                 'Description'   :   'Default communication profile for the agent.',
                 'Required'      :   True,
-                'Value'         :   "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
+                'Value'         :   ("/search?q=news&go=Search&qs=bs&form=QBRE,"
+                           "/search?q=weather&go=Search&qs=bs&form=QBRE,"
+                           "/search?q=movie%20tickets&go=Search&qs=bs&form=QBRE,"
+                           "/search?q=unit%20conversion&go=Search&qs=bs&form=QBRE"
+                           "|"
+                           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36"
+                           "|"
+                           "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             },
             'CertPath' : {
                 'Description'   :   'Certificate path for https listeners.',
                 'Required'      :   False,
-                'Value'         :   ''
+                'Value'         :   os.path.join(self.mainMenu.installPath, 'data')
             },
             'KillDate' : {
                 'Description'   :   'Date for the listener to exit (MM/dd/yyyy).',
@@ -800,7 +807,7 @@ class Listener:
                         }
                     }
                 """
-                
+
                 return updateServers + getTask + sendMessage
 
             elif language.lower() == 'python':
@@ -857,7 +864,7 @@ def send_message(packets=None):
         return (URLerror.reason, '')
 
     return ('', '')
-""" 
+"""
                 return updateServers + sendMessage
 
             else:
