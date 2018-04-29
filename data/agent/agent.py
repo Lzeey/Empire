@@ -54,7 +54,7 @@ jobMessageBuffer = ''
 currentListenerName = ""
 sendMsgFuncCode = ""
 loglevel = "WARNING"
-logging.basicConfig(level=loglevel)
+logging.basicConfig(format='[%(asctime)s][%(levelname)s] %(message)s', level=loglevel)
 
 #Windows specific imports
 import platform
