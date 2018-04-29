@@ -149,7 +149,7 @@ class Listener:
                 'Value'         :   '#general'
             },
             'LogLevel' : {
-                'Description'   :   '[Python only] Logging level. Set to DEBUG for debugging'
+                'Description'   :   '[Python only] Logging level. Set to DEBUG for debugging',
                 'Required'      :   False,
                 'Value'         :   'WARNING'
             }
