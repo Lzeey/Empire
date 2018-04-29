@@ -703,7 +703,7 @@ class Listener:
             code = code.replace('profile = "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"', 'profile = "%s"' % (profile))
             code = code.replace('lostLimit = 60', 'lostLimit = %s' % (lostLimit))
             code = code.replace('defaultResponse = base64.b64decode("")', 'defaultResponse = base64.b64decode("%s")' % (b64DefaultResponse))
-            code = code.replace('loglevel = "WARNING"', 'loglevel= = "%s"' % (loglevel))
+            code = code.replace('loglevel = "WARNING"', 'loglevel= "%s"' % (loglevel))
 
             # patch in the killDate and workingHours if they're specified
             if killDate != "":
