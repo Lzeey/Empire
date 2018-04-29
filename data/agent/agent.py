@@ -62,6 +62,8 @@ OS_TYPE = platform.system()
 logging.info("OS Detected: %s" % OS_TYPE)
 if OS_TYPE == "Windows":
     #import winpwd as pwd
+    logging.critical("Windows not supported")
+    raise(Exception("OSNotSupported"))
 else:
     import grp, pwd
 
