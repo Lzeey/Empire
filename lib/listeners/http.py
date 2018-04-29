@@ -101,7 +101,7 @@ class Listener:
             'CertPath' : {
                 'Description'   :   'Certificate path for https listeners.',
                 'Required'      :   False,
-                'Value'         :   os.path.join(self.mainMenu.installPath, 'data')
+                'Value'         :   os.path.join(mainMenu.installPath, 'data')
             },
             'KillDate' : {
                 'Description'   :   'Date for the listener to exit (MM/dd/yyyy).',
