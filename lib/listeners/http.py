@@ -305,6 +305,7 @@ class Listener:
                 if os.path.exists(customPath):
                     profile = load_profile(customPath)
                     listenerOptions['DefaultProfile']['Value'] = profile
+                    self.mainMenu.listeners.activeListeners[listenerName]['options']['DefaultProfile']['Value'] = profile
                     print helpers.color('[*] Read success')
             
             uris = [a for a in profile.split('|')[0].split(',')]
