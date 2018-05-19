@@ -301,8 +301,10 @@ class Listener:
             customProfile = listenerOptions['CustomProfile']['Value']
             if customProfile.lower() != 'default' and customProfile != '':
                 customPath = os.path.join(self.mainMenu.installPath, 'data/profiles', customProfile + '.txt')
+                print helpers.color('[*] listeners/http generate_launcher(): Reading profile from %s' % customPath)
                 if os.path.exists(customPath):
                     profile = load_profile(customPath)
+                    print helpers.color('[*] Read success')
             
             uris = [a for a in profile.split('|')[0].split(',')]
             stage0 = random.choice(uris)
