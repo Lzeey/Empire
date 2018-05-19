@@ -304,6 +304,7 @@ class Listener:
                 print helpers.color('[*] listeners/http generate_launcher(): Reading profile from %s' % customPath)
                 if os.path.exists(customPath):
                     profile = load_profile(customPath)
+                    listenerOptions['DefaultProfile']['Value'] = profile
                     print helpers.color('[*] Read success')
             
             uris = [a for a in profile.split('|')[0].split(',')]
