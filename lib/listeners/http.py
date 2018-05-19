@@ -307,6 +307,7 @@ class Listener:
                     listenerOptions['DefaultProfile']['Value'] = profile
                     self.mainMenu.listeners.activeListeners[listenerName]['options']['DefaultProfile']['Value'] = profile
                     print helpers.color('[*] Read success')
+                    print helpers.color('[*] %s' % listenerOptions['DefaultProfile']['Value'])
             
             uris = [a for a in profile.split('|')[0].split(',')]
             stage0 = random.choice(uris)
@@ -568,6 +569,15 @@ class Listener:
 
 
         profile = listenerOptions['DefaultProfile']['Value']
+        customProfile = listenerOptions['CustomProfile']['Value']
+        if customProfile.lower() != 'default' and customProfile != '':
+            customPath = os.path.join(self.mainMenu.installPath, 'data/profiles', customProfile + '.txt')
+            print helpers.color('[*] listeners/http generate_stager(): Reading profile from %s' % customPath)
+            if os.path.exists(customPath):
+                profile = load_profile(customPath)
+                listenerOptions['DefaultProfile']['Value'] = profile
+                print helpers.color('[*] Read success as2')
+                print helpers.color('[*] %s' % listenerOptions['DefaultProfile']['Value'])
         uris = [a.strip('/') for a in profile.split('|')[0].split(',')]
         launcher = listenerOptions['Launcher']['Value']
         stagingKey = listenerOptions['StagingKey']['Value']
@@ -681,6 +691,15 @@ class Listener:
         delay = listenerOptions['DefaultDelay']['Value']
         jitter = listenerOptions['DefaultJitter']['Value']
         profile = listenerOptions['DefaultProfile']['Value']
+        customProfile = listenerOptions['CustomProfile']['Value']
+        if customProfile.lower() != 'default' and customProfile != '':
+            customPath = os.path.join(self.mainMenu.installPath, 'data/profiles', customProfile + '.txt')
+            print helpers.color('[*] listeners/http generate_launcher(): Reading profile from %s' % customPath)
+            if os.path.exists(customPath):
+                profile = load_profile(customPath)
+                listenerOptions['DefaultProfile']['Value'] = profile
+                print helpers.color('[*] Read success')
+                print helpers.color('[*] %s' % listenerOptions['DefaultProfile']['Value'])
         lostLimit = listenerOptions['DefaultLostLimit']['Value']
         killDate = listenerOptions['KillDate']['Value']
         workingHours = listenerOptions['WorkingHours']['Value']
@@ -926,6 +945,16 @@ def send_message(packets=None):
 
         # make a copy of the currently set listener options for later stager/agent generation
         listenerOptions = copy.deepcopy(listenerOptions)
+
+		# Patch in the custom profile
+        customProfile = listenerOptions['CustomProfile']['Value']
+        if customProfile.lower() != 'default' and customProfile != '':
+            customPath = os.path.join(self.mainMenu.installPath, 'data/profiles', customProfile + '.txt')
+            print helpers.color('[*] listeners/http start_server(): Reading profile from %s' % customPath)
+            if os.path.exists(customPath):
+                profile = load_profile(customPath)
+                listenerOptions['DefaultProfile']['Value'] = profile
+                print helpers.color('[*] Read success asd')
 
         # suppress the normal Flask output
         log = logging.getLogger('werkzeug')
