@@ -25,7 +25,7 @@ def load_profile(filepath):
         profile = f.readlines()
 
     #Filter comment lines and empty lines
-    profile = map(lambda x: x.strip().strip('"').strip("'"), profiles)
+    profile = map(lambda x: x.strip().strip('"').strip("'"), profile)
     profile = filter(lambda x: len(x) >= 1, profile)
     profile = profile[-1]
     assert(profile.count('|') == 2)
