@@ -115,7 +115,7 @@ class Listener:
                 'Description'   :   'Load a custom communication profile for agent. If default or empty, uses the DefaultProfile param',
                 'Required'      :   False,
                 'Value'         :   'default',               
-            }
+            },
             'CertPath' : {
                 'Description'   :   'Certificate path for https listeners.',
                 'Required'      :   False,
