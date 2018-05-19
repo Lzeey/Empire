@@ -28,7 +28,7 @@ def load_profile(filepath):
     profile = map(lambda x: x.strip().strip('"').strip("'"), profile)
     profile = filter(lambda x: len(x) >= 1, profile)
     profile = profile[-1]
-    assert(profile.count('|') == 2)
+    assert(profile.count('|') >= 2)
 
     return profile
 
