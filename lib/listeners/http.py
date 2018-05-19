@@ -19,6 +19,19 @@ from lib.common import messages
 from lib.common import templating
 from lib.common import obfuscation
 
+def load_profile(filepath):
+    """Loads the custom C2 profile from a text file"""
+    with open(filepath) as f:
+        profile = f.readlines()
+
+    #Filter comment lines and empty lines
+    profile = map(lambda x: x.strip().strip('"').strip("'"), profiles)
+    profile = filter(lambda x: len(x) >= 1, profile)
+    profile = profile[-1]
+    assert(profile.count('|') == 2)
+
+    return profile
+
 
 class Listener:
 
@@ -98,6 +111,11 @@ class Listener:
                            "|"
                            "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             },
+            'CustomProfile' : {
+                'Description'   :   'Load a custom communication profile for agent. If default or empty, uses the DefaultProfile param',
+                'Required'      :   False,
+                'Value'         :   'default',               
+            }
             'CertPath' : {
                 'Description'   :   'Certificate path for https listeners.',
                 'Required'      :   False,
@@ -277,7 +295,15 @@ class Listener:
             host = listenerOptions['Host']['Value']
             launcher = listenerOptions['Launcher']['Value']
             stagingKey = listenerOptions['StagingKey']['Value']
+
             profile = listenerOptions['DefaultProfile']['Value']
+            # Replace DefaultProfile if Custom is available
+            customProfile = listenerOptions['CustomProfile']['Value']
+            if customProfile.lower() != 'default' and customProfile != '':
+                customPath = os.path.join(self.mainMenu.installPath, 'data/profiles', customProfile + '.txt')
+                if os.path.exists(customPath):
+                    profile = load_profile(customPath)
+            
             uris = [a for a in profile.split('|')[0].split(',')]
             stage0 = random.choice(uris)
             customHeaders = profile.split('|')[2:]
