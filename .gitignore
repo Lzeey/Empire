@@ -6,7 +6,6 @@ empire.debug
 downloads/*
 .vscode/*
 .idea/*
-*.txt
 LastTask*
 data/obfuscated_module_source/*.ps1
 data/misc/ToObfuscate.ps1
